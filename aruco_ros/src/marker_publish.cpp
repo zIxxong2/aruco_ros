@@ -156,7 +156,7 @@ public:
     {
       cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
       inImage_ = cv_ptr->image;
-
+      ROS_INFO("Publishing is okay : " );
       // clear out previous detection results
       markers_.clear();
 
@@ -182,6 +182,7 @@ public:
         // if there is camera info let's do 3D stuff
         if (useCamInfo_)
         {
+          ROS_INFO("we have camera info!!!!!!!! ");
           // get the current transform from the camera frame to output ref frame
           tf::StampedTransform cameraToReference;
           cameraToReference.setIdentity();

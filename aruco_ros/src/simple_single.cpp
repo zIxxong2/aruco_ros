@@ -148,6 +148,14 @@ public:
     if (reference_frame.empty())
       reference_frame = camera_frame;
 
+
+    ROS_INFO("camera_frame : %s", camera_frame.c_str());
+    //fprintf(stderr,"[%s:%d] : %s \n",__func__,__LINE__,camera_frame.c_str());
+    ROS_INFO("reference_frame : %s", reference_frame.c_str());
+    //
+    
+    fprintf(stderr,"[%s:%d] : %s\n",__func__,__LINE__,reference_frame.c_str());
+
     ROS_INFO("ArUco node started with marker size of %f m and marker id to track: %d", marker_size, marker_id);
     ROS_INFO("ArUco node will publish pose to TF with %s as parent and %s as child.", reference_frame.c_str(),
              marker_frame.c_str());
@@ -194,10 +202,12 @@ public:
     }
 
     static tf::TransformBroadcaster br;
+    fprintf(stderr,"이미지 콜백 안 1[%s:%d] \n",__func__,__LINE__);
     if (cam_info_received)
     {
       ros::Time curr_stamp = msg->header.stamp;
       cv_bridge::CvImagePtr cv_ptr;
+      fprintf(stderr,"카메라 인포 리시브 안 2 [%s:%d] \n",__func__,__LINE__);
       try
       {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
@@ -210,9 +220,11 @@ public:
         // for each marker, draw info and its boundaries in the image
         for (std::size_t i = 0; i < markers.size(); ++i)
         {
+          fprintf(stderr,"포문 안  [%s:%d] \n",__func__,__LINE__);
           // only publishing the selected marker
-          if (markers[i].id == marker_id)
+          if (markers[i].id == marker_id)   // single.launch에서 id값과 같지 않으면 tf 생성 안됨!  
           {
+            fprintf(stderr,"markers[i].id == marker_id 같음 [%s:%d] \n",__func__,__LINE__);
             tf::Transform transform = aruco_ros::arucoMarker2Tf(markers[i]);
             tf::StampedTransform cameraToReference;
             cameraToReference.setIdentity();
@@ -225,12 +237,30 @@ public:
             transform = static_cast<tf::Transform>(cameraToReference) * static_cast<tf::Transform>(rightToLeft)
                 * transform;
 
+            //Jisong _start
+            // static tf::TransformBroadcaster br2;
+            // tf::Transform transform_js;
+            // transform_js.setOrigin( tf::Vector3(0.0, 0.0, 0.0) );
+            // tf::Quaternion q;
+            // q.setRPY(0, 0, 0);
+            // transform_js.setRotation(q);
+            // br2.sendTransform (tf::StampedTransform(transform_js, ros::Time::now(), reference_frame, "jisong"));
+           
+            // tf2_ros::TransformBroadcaster tfb;
+            // geometry_msgs::TransformStamped abcd;
+            // abcd.header.stamp = ros::Time::now();
+            // abcd.header.frame_id = "camera_link";
+            // abcd.child_frame_id ="jisong3";
+            // abcd.transform.rotation.w = 1.0;
+            // tfb.sendTransform (abcd);
+            //Jisong_end
+
             tf::StampedTransform stampedTransform(transform, curr_stamp, reference_frame, marker_frame);
             br.sendTransform(stampedTransform);
             geometry_msgs::PoseStamped poseMsg;
             tf::poseTFToMsg(transform, poseMsg.pose);
             poseMsg.header.frame_id = reference_frame;
-            poseMsg.header.stamp = curr_stamp;
+            poseMsg.header.stamp = curr_stamp; 
             pose_pub.publish(poseMsg);
 
             geometry_msgs::TransformStamped transformMsg;
@@ -267,6 +297,8 @@ public:
             marker_pub.publish(visMarker);
 
           }
+          fprintf(stderr,"markers[i].id != marker_id %d 같지않음 [%s:%d ] \n",marker_id,__func__,__LINE__);
+
           // but drawing all the detected markers
           markers[i].draw(inImage, cv::Scalar(0, 0, 255), 2);
         }
@@ -335,6 +367,19 @@ public:
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "aruco_simple");
+  ros::NodeHandle node1;
+  // ros::AsyncSpinner *spinner;
+  // spinner = new ros::AsyncSpinner(0);
+  // spinner->start();
+  // while(1){
+  //   tf2_ros::TransformBroadcaster tfb;
+  //   geometry_msgs::TransformStamped abcd;
+  //   abcd.header.stamp = ros::Time::now();
+  //   abcd.header.frame_id = "camera_link";
+  //   abcd.child_frame_id ="jisong3";
+  //   abcd.transform.rotation.w = 1.0;
+  //   tfb.sendTransform (abcd);
+  // }
 
   ArucoSimple node;
 

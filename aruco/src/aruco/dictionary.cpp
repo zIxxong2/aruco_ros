@@ -37,6 +37,7 @@
 #include "markermap.h"
 #include <set>
 #include <stdexcept>
+#include <opencv2/aruco/dictionary.hpp>
 
 namespace aruco
 {
