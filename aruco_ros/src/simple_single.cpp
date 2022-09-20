@@ -202,12 +202,11 @@ public:
     }
 
     static tf::TransformBroadcaster br;
-    fprintf(stderr,"이미지 콜백 안 1[%s:%d] \n",__func__,__LINE__);
+    // 계속 카메라 정보를 읽어오기에 TransformBroadcaster로 받아준다 
     if (cam_info_received)
     {
       ros::Time curr_stamp = msg->header.stamp;
       cv_bridge::CvImagePtr cv_ptr;
-      fprintf(stderr,"카메라 인포 리시브 안 2 [%s:%d] \n",__func__,__LINE__);
       try
       {
         cv_ptr = cv_bridge::toCvCopy(msg, sensor_msgs::image_encodings::RGB8);
@@ -220,11 +219,10 @@ public:
         // for each marker, draw info and its boundaries in the image
         for (std::size_t i = 0; i < markers.size(); ++i)
         {
-          fprintf(stderr,"포문 안  [%s:%d] \n",__func__,__LINE__);
           // only publishing the selected marker
           if (markers[i].id == marker_id)   // single.launch에서 id값과 같지 않으면 tf 생성 안됨!  
           {
-            fprintf(stderr,"markers[i].id == marker_id 같음 [%s:%d] \n",__func__,__LINE__);
+            fprintf(stderr,"markers[i].id == marker_id  [%s:%d] \n",__func__,__LINE__);
             tf::Transform transform = aruco_ros::arucoMarker2Tf(markers[i]);
             tf::StampedTransform cameraToReference;
             cameraToReference.setIdentity();
@@ -297,7 +295,7 @@ public:
             marker_pub.publish(visMarker);
 
           }
-          fprintf(stderr,"markers[i].id != marker_id %d 같지않음 [%s:%d ] \n",marker_id,__func__,__LINE__);
+          fprintf(stderr,"markers[i].id != marker_id. marker_id : %d  [%s:%d ] \n",marker_id,__func__,__LINE__);
 
           // but drawing all the detected markers
           markers[i].draw(inImage, cv::Scalar(0, 0, 255), 2);
