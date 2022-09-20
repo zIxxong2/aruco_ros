@@ -14,6 +14,8 @@ Software package and ROS wrappers of the [Aruco][1] Augmented Reality marker det
 
 - ROS wrappers
 
+---
+
 ### Applications
 
 - Object pose estimation
@@ -38,7 +40,6 @@ Software package and ROS wrappers of the [Aruco][1] Augmented Reality marker det
 
        Header header
        aruco_ros/Marker[] markers
-
 
 ---
 
@@ -89,5 +90,3 @@ Software package and ROS wrappers of the [Aruco][1] Augmented Reality marker det
 <img align="right" src="https://raw.github.com/pal-robotics/aruco_ros/master/aruco_ros/etc/reem_gazebo_floating_marker.png"/>
 
 [1]: http://www.sciencedirect.com/science/article/pii/S0031320314000235 "Automatic generation and detection of highly reliable fiducial markers under occlusion by S. Garrido-Jurado and R. Muñoz-Salinas and F.J. Madrid-Cuevas and M.J. Marín-Jiménez 2014"
-
-### Using this!
