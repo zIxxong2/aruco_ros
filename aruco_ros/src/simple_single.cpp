@@ -243,7 +243,6 @@ public:
             // q.setRPY(0, 0, 0);
             // transform_js.setRotation(q);
             // br2.sendTransform (tf::StampedTransform(transform_js, ros::Time::now(), reference_frame, "jisong"));
-           
             // tf2_ros::TransformBroadcaster tfb;
             // geometry_msgs::TransformStamped abcd;
             // abcd.header.stamp = ros::Time::now();
