@@ -321,6 +321,8 @@ public:
 
         if (debug_pub.getNumSubscribers() > 0)
         {
+
+          
           // show also the internal image resulting from the threshold operation
           cv_bridge::CvImage debug_msg;
           debug_msg.header.stamp = curr_stamp;
